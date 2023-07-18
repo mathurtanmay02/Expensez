@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Financial Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f9f9f9;
+    }
+    
+    .top-navbar {
+      background-color: #303f9f;
+      color: #fff;
+      padding: 10px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 999;
+    }
+    
+    .navbar-brand {
+      color: #fff;
+      font-weight: bold;
+      margin-left: 20px;
+    }
+    
+    .navbar-right {
+      margin-left: auto;
+      margin-right: 20px;
+    }
+    
+    .signout-button {
+      background-color: #fff;
+      color: #303f9f;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    
+    .sidebar {
+      background-color: #fff;
+      width: 200px;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      overflow-y: auto;
+      padding-top: 50px;
+      margin-top: 0px; /*Added margin-top to adjust the position */
+    }
+    
+    .content {
+      margin-left: 200px;
+      padding: 20px;
+      background-color: #f5f5f5;
+      margin-top: 20px;
+    }
+    
+    h1 {
+      text-align: center;
+      color: #333;
+      font-size: 28px;
+      margin-bottom: 30px;
+    }
+    
+    .section {
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      padding: 20px;
+      border-radius: 5px;
+    }
+    
+    .section-title {
+      font-size: 18px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    
+    .sidebar ul {
+      list-style-type: none;
+      padding: 0;
+      margin: 0;
+    }
+    
+    .sidebar li {
+      padding: 15px;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+    }
+    
+    .sidebar a {
+      display: block;
+      color: #333;
+      text-decoration: none;
+    }
+    
+    .sidebar a:hover {
+      background-color: #e0e0e0;
+    }
+    
+    .sidebar a:hover span {
+      color: #303f9f;
+      transition: color 0.3s ease;
+    }
+    
+    .sidebar a span {
+      transition: color 0.3s ease;
+    }
+    
+    /* Updated Suggestion 1: Color Scheme */
+    .top-navbar {
+      background-color: #303f9f;
+    }
+    
+    .navbar-brand {
+      color: #fff;
+    }
+    
+    .signout-button {
+      background-color: #fff;
+      color: #303f9f;
+    }
+    
+    .sidebar {
+      background-color: #fff;
+    }
+    
+    .sidebar li {
+      background-color: #f0f0f0;
+    }
+    
+    .sidebar a {
+      color: #303f9f;
+    }
+    
+    .sidebar a:hover {
+      background-color: #e0e0e0;
+    }
+    
+    /* Updated Suggestion 3: Typography */
+    h1 {
+      font-family: "Arial", sans-serif;
+      font-weight: bold;
+      font-size: 32px;
+    }
+    
+    /* Updated Suggestion 4: Hover Effect */
+    .sidebar li:hover {
+      background-color: #e0e0e0;
+      transform: scale(1.05);
+    }
+    
+    /* Updated Suggestion 5: Spacing */
+    /* .sidebar {
+      padding-top: 50px;
+    } */
+    
+    .content {
+      /* margin-top: 80px; */
+      padding: 40px;
+    }
+
+    /* Updated CSS for table */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+    }
+
+    table th, table td {
+      padding: 10px;
+      text-align: left;
+      border-bottom: 1px solid #ccc;
+    }
+    
+    /* New CSS for table */
+    .table-header th {
+      background-color: #303f9f;
+      color: #fff;
+    }
+    
+    .table-header th:first-child {
+      border-radius: 5px 0 0 0;
+    }
+    
+    .table-header th:last-child {
+      border-radius: 0 5px 0 0;
+    }
+    
+    .table-header th:not(:first-child):not(:last-child) {
+      border-radius: 0;
+    }
+
+    /* Updated CSS for table rows */
+    table tbody tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+
+    .button-container {
+      display: flex;
+      gap : 10px;
+    }
+
+    .delete-button,
+    .update-button {
+      background-color: #dc3545; /* Delete button color */
+      color: #fff;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .update-button {
+      background-color: #17a2b8; /* Update button color */
+    }
+
+    .button-container button:hover {
+      opacity: 0.8; /* Reduce opacity on hover */
+    }
+
+    .button-container button:focus {
+      outline: none;
+    }
+
+    .button-container button:active {
+      opacity: 0.9; /* Reduce opacity when pressed */
+    }
+
+  </style>
+</head>
+<body>
+  <div class="top-navbar">
+    <div class="navbar-brand">
+      <span>Welcome, {{username}}</span>
+    </div>
+    <div class="navbar-right">
+      <form action="logout" method="post">
+        {% csrf_token %}
+        <input type="Submit" value="Sign Out" class="signout-button">
+      </form>
+    </div>
+  </div>
+  <nav class="sidebar">
+    <ul>
+      <li><a href="/"><span>Dashboard</span></a></li>
+      <li><a href="{% url 'transactions'%}"><span>Transactions</span></a></li>
+      <li><a href="{% url 'expenses'%}"><span>Expenses</span></a></li>
+      <li><a href="{% url 'addExpense'%}"><span>Add Expenses</span></a></li>
+      <li><a href="{% url 'income'%}"><span>Income</span></a></li>
+      <li><a href="{% url 'addIncome'%}"><span>Add Income</span></a></li>
+      <li><a href="{% url 'export' %}"><span>Export</span></a></li>
+      <li><a href="{% url 'changepassword'%}"><span>Change Password</span></a></li>
+    </ul>
+  </nav>
+  <div class="content">
+    <h1>Transactions</h1>
+    <table>
+      <thead class="table-header">
+        <tr>
+          <th>Name</th>
+          <th>Amount</th>
+          <th>Date</th>
+          <th>Description</th>
+          <th>Category</th>
+          <th>Action</th> <!-- New column for the action button -->
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in data %}
+        <tr>
+          <td>{{ item.Name }}</td>
+          <td>{{ item.Amount }}</td>
+          <td>{{ item.Date }}</td>
+          <td>{{ item.Description }}</td>
+          <td>{{ item.Category.Category }}</td>
+          <td>
+            <div class="button-container">
+              <form action="{% url 'updatePage' %}" method="post">
+                {% csrf_token %} 
+                {% if item.Amount < 0 %}
+                <input type="hidden" name="type" value="expenses">
+                {% else %}
+                <input type="hidden" name="type" value="income">
+                {% endif %}
+                <input type="hidden" name="id" value={{item.id}}>
+                <button type="submit" class="update-button">Update</button>
+              </form>
+              
+              <form action="/deletePage" method="post">
+                {% csrf_token %}
+                {% if item.Amount < 0 %}
+                <input type="hidden" name="type" value="expenses">
+                {% else %}
+                <input type="hidden" name="type" value="income">
+                {% endif %}
+                <input type="hidden" name="id" value={{item.id}}>
+                <button type="submit" class="delete-button">Delete</button>
+              </form>
+
+              </div>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>    
+  </div>
+</body>
+</html>
